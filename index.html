@@ -166,12 +166,87 @@ function calc(){const t=T[lang],P=CONFIG.prices,s=$("#cs").value;const w=+$("#wo
  $("#est").textContent=s==="reinigung"?o:`${t.est}: ≈ ${o}`}
 $("#langs").addEventListener("click",e=>{const l=e.target.dataset.l;if(!l)return;lang=l;try{localStorage.setItem("lang",l)}catch(x){}history.replaceState(null,"","#"+l);render()});
 $("#workers").onchange=calc;$("#cs").onchange=calc;$("#hours").oninput=calc;$("#area").oninput=calc;$("#layers").onchange=calc;
-$("#f").addEventListener("submit",e=>{e.preventDefault();const t=T[lang],r=$("#res");
- const ok=$("#fn").value.trim()&&$("#fp").value.trim().length>=6&&/^\S+@\S+\.\S+$/.test($("#fe").value)&&$("#fc").checked&&!$("#hp").value;
- r.hidden=false;
- if(!ok){r.textContent=t.err;return}
- const tx=["Новая заявка: "+$("#fs").selectedOptions[0].text,"Имя: "+$("#fn").value,"Тел: "+$("#fp").value,"Email: "+$("#fe").value,"Район: "+$("#fd").value,"Дата: "+$("#fdt").value,"Описание: "+$("#fm").value].join("\n");
- const a=document.createElement("a");a.className="btn";a.target="_blank";a.rel="noopener";a.href="https://t.me/"+CONFIG.tg+"?text="+encodeURIComponent(tx);a.textContent=t.ok;r.textContent="";r.appendChild(a)});
+
+$("#f").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const t = T[lang];
+  const r = $("#res");
+  const btn = e.submitter;
+
+  const ok =
+    $("#fn").value.trim() &&
+    $("#fp").value.trim().length >= 6 &&
+    /^\S+@\S+\.\S+$/.test($("#fe").value) &&
+    $("#fc").checked &&
+    !$("#hp").value;
+
+  r.hidden = false;
+
+  if (!ok) {
+    r.textContent = t.err;
+    return;
+  }
+
+  const API_URL = "https://zakazy-in-wien.stani-piatko.workers.dev/";
+
+  const payload = {
+    name: $("#fn").value.trim(),
+    phone: $("#fp").value.trim(),
+    email: $("#fe").value.trim(),
+    service: $("#fs").selectedOptions[0].text,
+    district: $("#fd").value.trim(),
+    date: $("#fdt").value,
+    msg: $("#fm").value.trim(),
+    hp: $("#hp").value
+  };
+
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.textContent = "Отправка...";
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.text();
+
+    if (!response.ok) {
+      throw new Error(result || "HTTP " + response.status);
+    }
+
+    const successMessages = {
+      de: "Ihre Anfrage wurde erfolgreich gesendet!",
+      en: "Your request has been sent successfully!",
+      ru: "Ваша заявка успешно отправлена!",
+      uk: "Вашу заявку успішно надіслано!"
+    };
+
+    r.textContent = successMessages[lang] + "\n" + result;
+    $("#f").reset();
+
+  } catch (error) {
+    console.error("Order submission error:", error);
+
+    const errorMessages = {
+      de: "Fehler beim Senden. Bitte versuchen Sie es erneut.",
+      en: "Sending failed. Please try again.",
+      ru: "Ошибка отправки. Попробуйте ещё раз.",
+      uk: "Помилка надсилання. Спробуйте ще раз."
+    };
+
+    r.textContent = errorMessages[lang];
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+});
+
 document.addEventListener("click",e=>{const a=e.target.closest('a[href^="tel:"]');if(!a)return;
  const u="tel:"+CONFIG.phoneRaw,tt=$("#toast");
  try{navigator.clipboard.writeText(CONFIG.phoneRaw)}catch(x){}
