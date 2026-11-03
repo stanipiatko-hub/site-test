@@ -137,8 +137,7 @@ wh:[["Прозорі пропозиції","Письмово, по пункта�
 st:["Надішліть запит","Ми надішлемо пропозицію","Дата і виконання","Приймання"],
 fq:[["Запит зобовʼязує?","Ні, він безкоштовний і необовʼязковий."],["Як рахується ціна?","Заглушка: визначає компанія."]]}
 };
-const TG={de:{ok:"Weiter zu Telegram",fTest:"Ihre Anfrage wird in Telegram vorbereitet, Sie senden sie dort ab. Fotos bitte direkt im Chat anhängen."},en:{ok:"Continue in Telegram",fTest:"Your request is prepared in Telegram and you send it there. Please attach photos in the chat."},ru:{ok:"Продолжить в Telegram",fTest:"Заявка подготовится в Telegram, отправите её там. Фото прикрепите прямо в чате."},uk:{ok:"Продовжити в Telegram",fTest:"Заявка підготується в Telegram, надішлете її там. Фото додайте прямо в чаті."}};
-Object.keys(TG).forEach(l=>Object.assign(T[l],TG[l]));
+
 const PR={de:{calcT:"Kostenrechner",calcB:"Unverbindliche Schätzung",calcWorkers:"Anzahl Mitarbeiter",calcHours:"Geschätzte Stunden",calcArea:"Fläche in m²",calcN:"Orientierung, kein Angebot. Material nicht enthalten. Verbindlich ist nur das schriftliche Angebot.",est:"Geschätzt",mat:"zzgl. Material",onReq:"Preis auf Anfrage"},en:{calcT:"Cost calculator",calcB:"Non-binding estimate",calcWorkers:"Number of staff",calcHours:"Estimated hours",calcArea:"Area in m²",calcN:"Indicative only, not a quote. Material not included. Only the written quote is binding.",est:"Estimated",mat:"plus material",onReq:"Price on request"},ru:{calcT:"Калькулятор стоимости",calcB:"Ориентировочная оценка",calcWorkers:"Количество сотрудников",calcHours:"Ориентировочно часов",calcArea:"Площадь, м²",calcN:"Ориентир, не предложение. Материал не включён. Действует только письменное предложение.",est:"Ориентировочно",mat:"+ материал",onReq:"Цена по запросу"},uk:{calcT:"Калькулятор вартості",calcB:"Орієнтовна оцінка",calcWorkers:"Кількість співробітників",calcHours:"Орієнтовно годин",calcArea:"Площа, м²",calcN:"Орієнтир, не пропозиція. Матеріал не включено. Діє лише письмова пропозиція.",est:"Орієнтовно",mat:"+ матеріал",onReq:"Ціна за запитом"}};
 Object.keys(PR).forEach(l=>Object.assign(T[l],PR[l]));
 const PR2={de:{priceT:"Preise",priceN:"Preise ohne MwSt. Verbindlich ist nur das schriftliche Angebot.",pMin:"Mindestbuchung Umzug: {h} Std.",pCar:"Fahrzeug",pStaff:"Pro Mitarbeiter",h:"Std.",onReq:"Nach Vereinbarung"},en:{priceT:"Prices",priceN:"Prices without VAT. Only the written quote is binding.",pMin:"Minimum booking for moves: {h} h.",pCar:"Vehicle",pStaff:"Per staff member",h:"h",onReq:"By agreement"},ru:{priceT:"Цены",priceN:"Цены без НДС. Действует только письменное предложение.",pMin:"Минимум для переезда: {h} ч.",pCar:"Автомобиль",pStaff:"За одного сотрудника",h:"ч",onReq:"Договорная"},uk:{priceT:"Ціни",priceN:"Ціни без ПДВ. Діє лише письмова пропозиція.",pMin:"Мінімум для переїзду: {h} год.",pCar:"Автомобіль",pStaff:"За одного співробітника",h:"год",onReq:"Догівна"}};
@@ -168,24 +167,81 @@ $("#langs").addEventListener("click",e=>{const l=e.target.dataset.l;if(!l)return
 $("#workers").onchange=calc;$("#cs").onchange=calc;$("#hours").oninput=calc;$("#area").oninput=calc;$("#layers").onchange=calc;
 
 $("#f").addEventListener("submit", async e => {
+  
+$("#f").addEventListener("submit", async e => {
   e.preventDefault();
 
   const t = T[lang];
   const r = $("#res");
-  const btn = e.submitter;
+  const form = $("#f");
+  const btn = e.submitter || form.querySelector('button[type="submit"]');
 
-  const ok =
-    $("#fn").value.trim() &&
-    $("#fp").value.trim().length >= 6 &&
-    /^\S+@\S+\.\S+$/.test($("#fe").value) &&
+  const name = $("#fn").value.trim();
+  const phone = $("#fp").value.trim();
+  const email = $("#fe").value.trim();
+
+  const valid =
+    name &&
+    phone.length >= 6 &&
+    /^\S+@\S+\.\S+$/.test(email) &&
     $("#fc").checked &&
     !$("#hp").value;
 
   r.hidden = false;
 
-  if (!ok) {
+  if (!valid) {
     r.textContent = t.err;
     return;
+  }
+
+  const payload = {
+    name,
+    phone,
+    email,
+    service: $("#fs").selectedOptions[0].text,
+    district: $("#fd").value.trim(),
+    date: $("#fdt").value,
+    msg: $("#fm").value.trim(),
+    hp: $("#hp").value
+  };
+
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.textContent = t.send || "Отправка...";
+
+  try {
+    const response = await fetch(
+      "https://zakazy-in-wien.stani-piatko.workers.dev/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    const result = await response.text();
+
+    if (!response.ok) {
+      throw new Error(result || "HTTP " + response.status);
+    }
+
+    r.textContent = "✅ " + (t.ok || "Заявка успешно отправлена!");
+
+    form.reset();
+
+  } catch (error) {
+    console.error("Order submission error:", error);
+    r.textContent = "❌ " + (
+      t.sendError || "Ошибка отправки. Попробуйте ещё раз."
+    );
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+});
+
   }
 
   const API_URL = "https://zakazy-in-wien.stani-piatko.workers.dev/";
@@ -202,7 +258,7 @@ $("#f").addEventListener("submit", async e => {
   };
 
   btn.disabled = true;
-  const originalText = btn.textContent;
+    originalText = btn.textContent;
   btn.textContent = "Отправка...";
 
   try {
