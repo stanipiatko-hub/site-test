@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prototyp – Umzug, Reinigung, Malerei, Möbelmontage in Wien</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f7f5f0;--surface:#fff;--text:#1d2a2f;--muted:#5d6b70;--accent:#0f6b5c;--accent-t:#fff;--line:#e2ddd2}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#12191b;--surface:#1b2528;--text:#eef2f1;--muted:#9fb0b3;--accent:#3fb59e;--accent-t:#06221c;--line:#2c3a3d}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#12191b;--surface:#1b2528;--text:#eef2f1;--muted:#9fb0b3;--accent:#3fb59e;--accent-t:#06221c;--line:#2c3a3d}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.2;margin:0 0 .5em}
+h1{font-size:clamp(2rem,6vw,3.2rem)}h2{font-size:clamp(1.5rem,4vw,2rem)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:11;background:var(--bg);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:10px;padding-bottom:10px}
+.logo{font-weight:700;font-family:Georgia,serif}
+.langs{display:flex;gap:4px}
+.langs button{border:1px solid var(--line);background:var(--surface);color:var(--text);padding:6px 9px;border-radius:8px;cursor:pointer;font-size:.85rem}
+.langs button[aria-pressed="true"]{background:var(--accent);color:var(--accent-t);border-color:var(--accent)}
+.hero{padding:56px 0 40px}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:620px}
+.btn{display:inline-block;background:var(--accent);color:var(--accent-t);padding:13px 22px;border-radius:12px;text-decoration:none;font-weight:600;border:0;cursor:pointer;font-size:1rem}
+.btn.alt{background:transparent;color:var(--text);border:1px solid var(--line);margin-left:8px}
+section{padding:36px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px}
+.card .ic{font-size:1.8rem}
+.steps{counter-reset:s;display:grid;gap:12px;padding:0;list-style:none}
+.steps li{counter-increment:s;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px 14px 56px;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:16px;top:12px;width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-t);display:grid;place-items:center;font-weight:700}
+form,.calc{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:12px}
+label{font-size:.9rem;color:var(--muted);display:grid;gap:4px}
+input,select,textarea{font:inherit;padding:11px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);width:100%}
+.note{font-size:.85rem;color:var(--muted)}
+[hidden]{display:none!important}
+.badge{display:inline-block;background:var(--line);padding:3px 10px;border-radius:99px;font-size:.8rem}
+.out{font-size:1.4rem;font-weight:700}
+.msg{padding:10px 14px;border-radius:10px;background:var(--line)}
+details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:8px}
+summary{cursor:pointer;font-weight:600}
+footer{border-top:1px solid var(--line);padding:28px 0 90px;color:var(--muted);font-size:.9rem}
+.sticky{position:fixed;left:0;right:0;bottom:0;display:flex;gap:8px;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--line);z-index:12}
+.sticky a{flex:1;text-align:center;margin:0}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><span class="logo" id="brand"></span><div class="langs" id="langs"></div></div></header>
+
+<main class="wrap">
+<div class="hero">
+<span class="badge" data-i="proto"></span>
+<h1 data-i="h1" style="margin-top:14px"></h1>
+<p data-i="sub"></p>
+<a class="btn" href="#kontakt" data-i="cta"></a><a class="btn alt" href="#rechner" data-i="cta2"></a>
+</div>
+
+<section id="leistungen"><h2 data-i="svc"></h2>
+<div class="grid" id="services"></div></section>
+
+<section><h2 data-i="why"></h2>
+<div class="grid" id="why"></div></section>
+
+<section><h2 data-i="proc"></h2>
+<ol class="steps" id="steps"></ol></section>
+
+<section id="preise"><h2 data-i="priceT"></h2><div class="grid" id="prices"></div><p class="note" data-i="priceN" style="margin-top:12px"></p></section>
+
+<section id="rechner"><h2 data-i="calcT"></h2>
+<div class="calc">
+<span class="badge" data-i="calcB"></span>
+<label><span data-i="fService"></span><select id="cs"></select></label>
+<label id="lw"><span data-i="calcWorkers"></span><select id="workers"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option></select></label>
+<label id="lh"><span data-i="calcHours"></span><input id="hours" type="number" min="1" max="24" step="0.5" value="4"></label>
+<label id="la" hidden><span data-i="calcArea"></span><input id="area" type="number" min="1" max="1000" value="40"></label>
+<label id="ly" hidden><span data-i="calcLayers"></span><select id="layers"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></label>
+<div class="out" id="est"></div>
+<p class="note" data-i="calcN"></p>
+</div></section>
+
+<section><h2 data-i="faqT"></h2><div id="faq"></div></section>
+
+<section id="kontakt"><h2 data-i="formT"></h2>
+<form id="f" novalidate>
+<label><span data-i="fService"></span><select id="fs"></select></label>
+<label><span data-i="fName"></span><input id="fn" required autocomplete="name"></label>
+<label><span data-i="fPhone"></span><input id="fp" type="tel" required autocomplete="tel"></label>
+<label><span data-i="fMail"></span><input id="fe" type="email" required autocomplete="email"></label>
+<label><span data-i="fDistrict"></span><input id="fd" placeholder="1010, 1220 …"></label>
+<label><span data-i="fDate"></span><input id="fdt" type="date"></label>
+<label><span data-i="fMsg"></span><textarea id="fm" rows="4"></textarea></label>
+<label><span data-i="fPhoto"></span><input type="file" accept="image/*" multiple></label>
+<input id="hp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+<label style="display:flex;gap:8px;align-items:flex-start"><input id="fc" type="checkbox" style="width:auto;margin-top:5px"><span data-i="fConsent"></span></label>
+<button class="btn" type="submit" data-i="fSend"></button>
+<div class="msg" id="res" role="status" hidden></div>
+<p class="note" data-i="fTest"></p>
+</form></section>
+</main>
+
+<footer><div class="wrap">
+<p><strong id="fbrand"></strong> · <span data-i="fAddr"></span> · <a id="fphone" href="tel:+436765814693" style="color:inherit"></a> · <span id="fmail"></span></p>
+<p><a href="#" data-i="impr" style="color:inherit"></a> · <a href="#" data-i="priv" style="color:inherit"></a></p>
+<p class="note" data-i="fNote"></p>
+</div></footer>
+<div class="msg" id="toast" role="status" hidden style="position:fixed;left:14px;right:14px;bottom:84px;z-index:13;font-size:1.2rem;text-align:center;user-select:all"></div>
+<div class="sticky"><a class="btn" id="callBtn" href="tel:+436765814693" data-i="call"></a><a class="btn alt" id="tgBtn" href="#kontakt" rel="noopener">Telegram</a></div>
+
+<script>
+// ===== ZENTRALE KONFIGURATION / CENTRAL CONFIG (alles Platzhalter) =====
+const CONFIG={brand:"[Firmenname]",phone:"+43 676 5814693",phoneRaw:"+436765814693",tg:"gekky_pmgc",email:"[E-Mail]",
+ prices:{carHour:50,workerHour:20,paintM2:6,minMoveHours:2.5}, // Preise in € (hier ändern): Auto/Std, Mitarbeiter/Std, Malerei/m²
+ 
+ services:["umzug","reinigung","malerei","montage"]};
+const T={
+de:{proto:"Prototyp · Platzhalterdaten",h1:"Umzug, Reinigung, Malerei & Möbelmontage in Wien",sub:"Ein Ansprechpartner, klare Angebote, zuverlässige Teams. Fordern Sie Ihr unverbindliches Angebot an.",cta:"Angebot anfragen",cta2:"Kosten schätzen",svc:"Unsere Leistungen",why:"Ihre Vorteile",proc:"So funktioniert es",calcT:"Orientierungsrechner Umzug",calcB:"Nur Beispielwerte",calcWorkers:"Anzahl Mitarbeiter",calcHours:"Geschätzte Stunden",calcN:"Unverbindliche Orientierung mit Platzhalter-Satz. Es gilt ausschließlich das schriftliche Angebot.",faqT:"Häufige Fragen",formT:"Angebot anfragen",fService:"Leistung",fName:"Name",fPhone:"Telefon",fMail:"E-Mail",fDistrict:"Adresse oder Bezirk",fDate:"Wunschtermin",fMsg:"Beschreibung",fPhoto:"Fotos (optional)",fConsent:"Ich stimme der Verarbeitung meiner Daten gemäß Datenschutzerklärung zu.",fSend:"Anfrage senden",fTest:"Testmodus: Es wird nichts gesendet.",fAddr:"[Adresse], Wien",impr:"Impressum",priv:"Datenschutz",fNote:"Platzhalter-Inhalte. Bewertungen erst, wenn echte vorliegen.",call:"Anrufen",err:"Bitte Name, Telefon, gültige E-Mail und Zustimmung angeben.",ok:"Testmodus: Formular ist gültig, nichts wurde gesendet.",est:"Beispielrechnung",
+sv:{umzug:["🚚","Umzug","Wohnungs-, Haus- und Büroumzüge."],reinigung:["🧽","Reinigung","Wohnungen, Häuser, Räume."],malerei:["🎨","Malerei","Wände, Decken, Innenräume."],montage:["🔧","Möbelmontage","Auf- und Abbau von Möbeln."]},
+wh:[["Transparente Angebote","Schriftlich, mit allen Positionen."],["Ein Ansprechpartner","Vier Leistungen aus einer Hand."],["Mehrsprachig","DE, EN, RU, UK."]],
+st:["Anfrage senden","Wir melden uns mit einem Angebot","Termin und Durchführung","Abnahme"],
+fq:[["Ist die Anfrage verbindlich?","Nein, sie ist kostenlos und unverbindlich."],["Wie wird der Preis berechnet?","Platzhalter: wird vom Unternehmen festgelegt."]]},
+en:{proto:"Prototype · placeholder data",h1:"Moving, cleaning, painting & furniture assembly in Vienna",sub:"One contact, clear quotes, reliable teams. Request your free, non-binding quote.",cta:"Request a quote",cta2:"Estimate cost",svc:"Our services",why:"Why choose us",proc:"How it works",calcT:"Moving estimate",calcB:"Sample values only",calcWorkers:"Number of movers",calcHours:"Estimated hours",calcN:"Indicative only, using a placeholder rate. Only the written quote counts.",faqT:"FAQ",formT:"Request a quote",fService:"Service",fName:"Name",fPhone:"Phone",fMail:"Email",fDistrict:"Address or district",fDate:"Preferred date",fMsg:"Description",fPhoto:"Photos (optional)",fConsent:"I agree to my data being processed per the privacy policy.",fSend:"Send request",fTest:"Test mode: nothing is sent.",fAddr:"[Address], Vienna",impr:"Legal notice",priv:"Privacy",fNote:"Placeholder content. Reviews only once real ones exist.",call:"Call",err:"Please enter name, phone, a valid email and consent.",ok:"Test mode: form is valid, nothing was sent.",est:"Sample calculation",
+sv:{umzug:["🚚","Moving","Apartment, house and office moves."],reinigung:["🧽","Cleaning","Apartments, houses, premises."],malerei:["🎨","Painting","Walls, ceilings, interiors."],montage:["🔧","Furniture assembly","Assembly and disassembly."]},
+wh:[["Transparent quotes","In writing, itemised."],["One contact","Four services in one place."],["Multilingual","DE, EN, RU, UK."]],
+st:["Send request","We reply with a quote","Appointment and service","Handover"],
+fq:[["Is the request binding?","No, it is free and non-binding."],["How is the price calculated?","Placeholder: set by the company."]]},
+ru:{proto:"Прототип · данные-заглушки",h1:"Переезды, уборка, покраска и сборка мебели в Вене",sub:"Один контакт, понятные предложения, надёжные бригады. Запросите бесплатный расчёт.",cta:"Запросить расчёт",cta2:"Оценить стоимость",svc:"Наши услуги",why:"Преимущества",proc:"Как это работает",calcT:"Ориентировочный расчёт переезда",calcB:"Только примерные значения",calcWorkers:"Количество грузчиков",calcHours:"Ориентировочно часов",calcN:"Ориентир с условной ставкой. Действует только письменное предложение.",faqT:"Частые вопросы",formT:"Запросить расчёт",fService:"Услуга",fName:"Имя",fPhone:"Телефон",fMail:"Email",fDistrict:"Адрес или район",fDate:"Желаемая дата",fMsg:"Описание",fPhoto:"Фото (по желанию)",fConsent:"Согласен на обработку данных согласно политике конфиденциальности.",fSend:"Отправить запрос",fTest:"Тестовый режим: ничего не отправляется.",fAddr:"[Адрес], Вена",impr:"Impressum",priv:"Конфиденциальность",fNote:"Содержимое-заглушка. Отзывы только реальные.",call:"Позвонить",err:"Укажите имя, телефон, корректный email и согласие.",ok:"Тестовый режим: форма заполнена верно, ничего не отправлено.",est:"Пример расчёта",
+sv:{umzug:["🚚","Переезды","Квартиры, дома, офисы."],reinigung:["🧽","Уборка","Квартиры, дома, помещения."],malerei:["🎨","Покраска","Стены, потолки, интерьеры."],montage:["🔧","Сборка мебели","Сборка и разборка."]},
+wh:[["Прозрачные предложения","В письменном виде, по пунктам."],["Один контакт","Четыре услуги в одном месте."],["Многоязычие","DE, EN, RU, UK."]],
+st:["Отправьте запрос","Мы пришлём предложение","Дата и выполнение","Приёмка"],
+fq:[["Запрос обязывает?","Нет, он бесплатный и необязывающий."],["Как считается цена?","Заглушка: определяет компания."]]},
+uk:{proto:"Прототип · дані-заглушки",h1:"Переїзди, прибирання, фарбування та збирання меблів у Відні",sub:"Один контакт, зрозумілі пропозиції, надійні бригади. Замовте безкоштовний розрахунок.",cta:"Замовити розрахунок",cta2:"Оцінити вартість",svc:"Наші послуги",why:"Переваги",proc:"Як це працює",calcT:"Орієнтовний розрахунок переїзду",calcB:"Лише приклад значень",calcWorkers:"Кількість вантажників",calcHours:"Орієнтовно годин",calcN:"Орієнтир з умовною ставкою. Діє лише письмова пропозиція.",faqT:"Часті запитання",formT:"Замовити розрахунок",fService:"Послуга",fName:"Імʼя",fPhone:"Телефон",fMail:"Email",fDistrict:"Адреса або район",fDate:"Бажана дата",fMsg:"Опис",fPhoto:"Фото (за бажанням)",fConsent:"Погоджуюсь на обробку даних згідно з політикою конфіденційності.",fSend:"Надіслати запит",fTest:"Тестовий режим: нічого не надсилається.",fAddr:"[Адреса], Відень",impr:"Impressum",priv:"Конфіденційність",fNote:"Вміст-заглушка. Відгуки лише справжні.",call:"Подзвонити",err:"Вкажіть імʼя, телефон, коректний email і згоду.",ok:"Тестовий режим: форму заповнено вірно, нічого не надіслано.",est:"Приклад розрахунку",
+sv:{umzug:["🚚","Переїзди","Квартири, будинки, офіси."],reinigung:["🧽","Прибирання","Квартири, будинки, приміщення."],malerei:["🎨","Фарбування","Стіни, стелі, інтерʼєри."],montage:["🔧","Збирання меблів","Збирання та розбирання."]},
+wh:[["Прозорі пропозиції","Письмово, по пунктах."],["Один контакт","Чотири послуги в одному місці."],["Багатомовність","DE, EN, RU, UK."]],
+st:["Надішліть запит","Ми надішлемо пропозицію","Дата і виконання","Приймання"],
+fq:[["Запит зобовʼязує?","Ні, він безкоштовний і необовʼязковий."],["Як рахується ціна?","Заглушка: визначає компанія."]]}
+};
+const TG={de:{ok:"Weiter zu Telegram",fTest:"Ihre Anfrage wird in Telegram vorbereitet, Sie senden sie dort ab. Fotos bitte direkt im Chat anhängen."},en:{ok:"Continue in Telegram",fTest:"Your request is prepared in Telegram and you send it there. Please attach photos in the chat."},ru:{ok:"Продолжить в Telegram",fTest:"Заявка подготовится в Telegram, отправите её там. Фото прикрепите прямо в чате."},uk:{ok:"Продовжити в Telegram",fTest:"Заявка підготується в Telegram, надішлете її там. Фото додайте прямо в чаті."}};
+Object.keys(TG).forEach(l=>Object.assign(T[l],TG[l]));
+const PR={de:{calcT:"Kostenrechner",calcB:"Unverbindliche Schätzung",calcWorkers:"Anzahl Mitarbeiter",calcHours:"Geschätzte Stunden",calcArea:"Fläche in m²",calcN:"Orientierung, kein Angebot. Material nicht enthalten. Verbindlich ist nur das schriftliche Angebot.",est:"Geschätzt",mat:"zzgl. Material",onReq:"Preis auf Anfrage"},en:{calcT:"Cost calculator",calcB:"Non-binding estimate",calcWorkers:"Number of staff",calcHours:"Estimated hours",calcArea:"Area in m²",calcN:"Indicative only, not a quote. Material not included. Only the written quote is binding.",est:"Estimated",mat:"plus material",onReq:"Price on request"},ru:{calcT:"Калькулятор стоимости",calcB:"Ориентировочная оценка",calcWorkers:"Количество сотрудников",calcHours:"Ориентировочно часов",calcArea:"Площадь, м²",calcN:"Ориентир, не предложение. Материал не включён. Действует только письменное предложение.",est:"Ориентировочно",mat:"+ материал",onReq:"Цена по запросу"},uk:{calcT:"Калькулятор вартості",calcB:"Орієнтовна оцінка",calcWorkers:"Кількість співробітників",calcHours:"Орієнтовно годин",calcArea:"Площа, м²",calcN:"Орієнтир, не пропозиція. Матеріал не включено. Діє лише письмова пропозиція.",est:"Орієнтовно",mat:"+ матеріал",onReq:"Ціна за запитом"}};
+Object.keys(PR).forEach(l=>Object.assign(T[l],PR[l]));
+const PR2={de:{priceT:"Preise",priceN:"Preise ohne MwSt. Verbindlich ist nur das schriftliche Angebot.",pMin:"Mindestbuchung Umzug: {h} Std.",pCar:"Fahrzeug",pStaff:"Pro Mitarbeiter",h:"Std.",onReq:"Nach Vereinbarung"},en:{priceT:"Prices",priceN:"Prices without VAT. Only the written quote is binding.",pMin:"Minimum booking for moves: {h} h.",pCar:"Vehicle",pStaff:"Per staff member",h:"h",onReq:"By agreement"},ru:{priceT:"Цены",priceN:"Цены без НДС. Действует только письменное предложение.",pMin:"Минимум для переезда: {h} ч.",pCar:"Автомобиль",pStaff:"За одного сотрудника",h:"ч",onReq:"Договорная"},uk:{priceT:"Ціни",priceN:"Ціни без ПДВ. Діє лише письмова пропозиція.",pMin:"Мінімум для переїзду: {h} год.",pCar:"Автомобіль",pStaff:"За одного співробітника",h:"год",onReq:"Догівна"}};
+Object.keys(PR2).forEach(l=>Object.assign(T[l],PR2[l]));
+const PR3={de:{calcLayers:"Anzahl Schichten",layer:"pro Schicht"},en:{calcLayers:"Number of coats",layer:"per coat"},ru:{calcLayers:"Количество слоёв",layer:"за слой"},uk:{calcLayers:"Кількість шарів",layer:"за шар"}};
+Object.keys(PR3).forEach(l=>Object.assign(T[l],PR3[l]));
+const $=s=>document.querySelector(s);
+let lang="de";
+try{const h=location.hash.slice(1);if(T[h])lang=h;else{const s=localStorage.getItem("lang");if(T[s])lang=s}}catch(e){}
+function render(){
+ const t=T[lang];document.documentElement.lang=lang;
+ document.querySelectorAll("[data-i]").forEach(e=>{const v=t[e.dataset.i];if(typeof v==="string")e.textContent=v});
+ $("#brand").textContent=CONFIG.brand;$("#callBtn").href="tel:"+CONFIG.phoneRaw;$("#fphone").href="tel:"+CONFIG.phoneRaw;$("#tgBtn").href="https://t.me/"+CONFIG.tg;$("#tgBtn").target="_blank";$("#fbrand").textContent=CONFIG.brand;$("#fphone").textContent=CONFIG.phone;$("#fmail").textContent=CONFIG.email;
+ $("#langs").innerHTML=Object.keys(T).map(l=>`<button type="button" data-l="${l}" aria-pressed="${l===lang}">${l.toUpperCase()}</button>`).join("");
+ $("#services").innerHTML=CONFIG.services.map(k=>{const s=t.sv[k];return `<div class="card"><div class="ic" aria-hidden="true">${s[0]}</div><h3>${s[1]}</h3><p class="note">${s[2]}</p></div>`}).join("");
+ $("#why").innerHTML=t.wh.map(w=>`<div class="card"><h3>${w[0]}</h3><p class="note">${w[1]}</p></div>`).join("");
+ const P0=CONFIG.prices,e0=n=>"€ "+n.toLocaleString(lang);$("#prices").innerHTML=[[t.sv.umzug[1],t.pCar,e0(P0.carHour)+" / "+t.h],[t.sv.umzug[1]+", "+t.sv.montage[1],t.pStaff,e0(P0.workerHour)+" / "+t.h],[t.sv.malerei[1],"",e0(P0.paintM2)+" / m² "+t.layer+", "+t.mat],[t.sv.reinigung[1],"",t.onReq]].map(r=>`<div class="card"><h3>${r[0]}</h3><p class="note">${r[1]}</p><div class="out">${r[2]}</div></div>`).join("");
+ $("[data-i=priceN]").textContent=t.pMin.replace("{h}",P0.minMoveHours.toLocaleString(lang))+" "+t.priceN;
+ $("#steps").innerHTML=t.st.map(s=>`<li>${s}</li>`).join("");
+ $("#faq").innerHTML=t.fq.map(q=>`<details><summary>${q[0]}</summary><p>${q[1]}</p></details>`).join("");
+ const c2=$("#cs").value;$("#cs").innerHTML=CONFIG.services.map(k=>`<option value="${k}">${t.sv[k][1]}</option>`).join("");if(c2)$("#cs").value=c2;const cur=$("#fs").value;$("#fs").innerHTML=CONFIG.services.map(k=>`<option value="${k}">${t.sv[k][1]}</option>`).join("");if(cur)$("#fs").value=cur;
+ calc();
+}
+function calc(){const t=T[lang],P=CONFIG.prices,s=$("#cs").value;const w=+$("#workers").value,h=Math.max(1,+$("#hours").value||1),m=Math.max(1,+$("#area").value||1);$("#lw").hidden=$("#lh").hidden=!(s==="umzug"||s==="montage");$("#la").hidden=$("#ly").hidden=s!=="malerei";const f=n=>"€ "+n.toLocaleString(lang);let o;if(s==="umzug")o=f(Math.max(h,P.minMoveHours)*(P.carHour+w*P.workerHour));else if(s==="montage")o=f(h*w*P.workerHour);else if(s==="malerei")o=f(m*(+$("#layers").value||1)*P.paintM2)+" "+t.mat;else o=t.onReq;
+ $("#est").textContent=s==="reinigung"?o:`${t.est}: ≈ ${o}`}
+$("#langs").addEventListener("click",e=>{const l=e.target.dataset.l;if(!l)return;lang=l;try{localStorage.setItem("lang",l)}catch(x){}history.replaceState(null,"","#"+l);render()});
+$("#workers").onchange=calc;$("#cs").onchange=calc;$("#hours").oninput=calc;$("#area").oninput=calc;$("#layers").onchange=calc;
+$("#f").addEventListener("submit",e=>{e.preventDefault();const t=T[lang],r=$("#res");
+ const ok=$("#fn").value.trim()&&$("#fp").value.trim().length>=6&&/^\S+@\S+\.\S+$/.test($("#fe").value)&&$("#fc").checked&&!$("#hp").value;
+ r.hidden=false;
+ if(!ok){r.textContent=t.err;return}
+ const tx=["Новая заявка: "+$("#fs").selectedOptions[0].text,"Имя: "+$("#fn").value,"Тел: "+$("#fp").value,"Email: "+$("#fe").value,"Район: "+$("#fd").value,"Дата: "+$("#fdt").value,"Описание: "+$("#fm").value].join("\n");
+ const a=document.createElement("a");a.className="btn";a.target="_blank";a.rel="noopener";a.href="https://t.me/"+CONFIG.tg+"?text="+encodeURIComponent(tx);a.textContent=t.ok;r.textContent="";r.appendChild(a)});
+document.addEventListener("click",e=>{const a=e.target.closest('a[href^="tel:"]');if(!a)return;
+ const u="tel:"+CONFIG.phoneRaw,tt=$("#toast");
+ try{navigator.clipboard.writeText(CONFIG.phoneRaw)}catch(x){}
+ tt.hidden=false;tt.textContent="📞 "+CONFIG.phone;setTimeout(()=>{tt.hidden=true},8000);
+ e.preventDefault();
+ try{if(!window.open(u,"_top"))location.href=u}catch(x){location.href=u}
+});
+render();
+</script>
+</body>
+</html>
